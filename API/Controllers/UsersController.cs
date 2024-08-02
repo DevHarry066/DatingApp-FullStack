@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("/api/[Controller]")]
-public class UsersController(DataContext context)
+public class UsersController(DataContext context) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
@@ -22,10 +20,5 @@ public class UsersController(DataContext context)
         var user = await context.Users.FindAsync(id);
         if (user == null) return NotFound();
         return user;
-    }
-
-    private ActionResult<AppUser> NotFound()
-    {
-        throw new NotImplementedException();
     }
 }
