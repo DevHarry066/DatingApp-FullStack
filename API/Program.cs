@@ -1,17 +1,17 @@
+using System.Text;
+using API;
 using API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+// Add Application Services
+builder.Services.AddApplicationServices(builder.Configuration);
+//Add Identity Services
+builder.Services.AddIdentityServices(builder.Configuration);
 
-builder.Services.AddCors();
-
-builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -19,6 +19,9 @@ var app = builder.Build();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithOrigins(
     "http://localhost:4200", "https://localhost:4200"
 ));
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
